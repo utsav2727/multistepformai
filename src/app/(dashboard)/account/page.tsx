@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Shield, User } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
@@ -72,17 +72,24 @@ export default function AccountPage() {
         </div>
 
         <div className="max-w-2xl space-y-4 sm:space-y-6">
-          <Card>
+          <Card className="transition-all duration-200 hover:shadow-sm">
             <CardHeader className="p-4 sm:p-6">
-              <CardTitle>Profile</CardTitle>
-              <CardDescription>
-                Your account information.
-              </CardDescription>
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/10 to-indigo-500/10">
+                  <User className="h-4 w-4 text-purple-500" />
+                </div>
+                <div>
+                  <CardTitle>Profile</CardTitle>
+                  <CardDescription>
+                    Your account information.
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4">
               <div className="space-y-2">
                 <Label>Email</Label>
-                <Input value={user?.email ?? ""} disabled />
+                <Input value={user?.email ?? ""} disabled className="transition-all duration-200" />
                 <p className="text-xs text-muted-foreground">
                   Your email address is managed through your authentication
                   provider.
@@ -90,17 +97,24 @@ export default function AccountPage() {
               </div>
               <div className="space-y-2">
                 <Label>User ID</Label>
-                <Input value={user?.id ?? ""} disabled className="font-mono text-xs" />
+                <Input value={user?.id ?? ""} disabled className="font-mono text-xs transition-all duration-200" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all duration-200 hover:shadow-sm">
             <CardHeader className="p-4 sm:p-6">
-              <CardTitle>Change Password</CardTitle>
-              <CardDescription>
-                Update your password to keep your account secure.
-              </CardDescription>
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/10 to-indigo-500/10">
+                  <Shield className="h-4 w-4 text-purple-500" />
+                </div>
+                <div>
+                  <CardTitle>Change Password</CardTitle>
+                  <CardDescription>
+                    Update your password to keep your account secure.
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4">
               <div className="space-y-2">
@@ -111,6 +125,7 @@ export default function AccountPage() {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Enter current password"
+                  className="transition-all duration-200 focus:ring-2 focus:ring-purple-500/20"
                 />
               </div>
               <div className="space-y-2">
@@ -121,6 +136,7 @@ export default function AccountPage() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter new password"
+                  className="transition-all duration-200 focus:ring-2 focus:ring-purple-500/20"
                 />
               </div>
               <div className="space-y-2">
@@ -131,13 +147,14 @@ export default function AccountPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm new password"
+                  className="transition-all duration-200 focus:ring-2 focus:ring-purple-500/20"
                 />
               </div>
               <div className="flex justify-end">
                 <Button
                   onClick={handleUpdatePassword}
                   disabled={updatingPassword || !newPassword || !confirmPassword}
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 border-0 text-white transition-all duration-300"
                 >
                   {updatingPassword ? (
                     <>
@@ -155,7 +172,7 @@ export default function AccountPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all duration-200 hover:shadow-sm border-destructive/20">
             <CardHeader className="p-4 sm:p-6">
               <CardTitle>Danger Zone</CardTitle>
               <CardDescription>

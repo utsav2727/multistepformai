@@ -16,9 +16,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "formAI - AI-Powered Form Builder",
+  title: "formAI — The Webflow-Native AI Form Builder",
   description:
-    "Generate custom multi-step forms using AI and embed them into any website.",
+    "AI-powered multi-step form builder for modern websites. Describe your form, AI builds it, embed anywhere with one click.",
+  openGraph: {
+    title: "formAI — The Webflow-Native AI Form Builder",
+    description:
+      "AI-powered multi-step form builder for modern websites. Describe your form, AI builds it, embed anywhere with one click.",
+    siteName: "formAI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "formAI — The Webflow-Native AI Form Builder",
+    description:
+      "AI-powered multi-step form builder for modern websites. Describe your form, AI builds it, embed anywhere with one click.",
+  },
 };
 
 export default function RootLayout({

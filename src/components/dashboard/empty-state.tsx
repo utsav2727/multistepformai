@@ -18,15 +18,15 @@ export function EmptyState({
   actionHref = "/dashboard/new",
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 px-4 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-        {icon ?? <FileText className="h-8 w-8 text-muted-foreground" />}
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed py-16 px-4 text-center bg-gradient-to-br from-purple-500/5 via-transparent to-indigo-500/5">
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/10 to-indigo-500/10">
+        {icon ?? <FileText className="h-8 w-8 text-purple-500" />}
       </div>
       <h3 className="mt-4 text-lg font-semibold">{heading}</h3>
       <p className="mt-1 max-w-sm text-sm text-muted-foreground">
         {description}
       </p>
-      <Button asChild className="mt-6">
+      <Button asChild className="mt-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 border-0 text-white glow transition-all duration-300">
         <Link href={actionHref}>
           <Plus className="h-4 w-4" />
           {actionLabel}

@@ -5,5 +5,6 @@ export const PLAN_LIMITS = {
 } as const;
 
 export const APP_NAME = "formAI";
+export const APP_TAGLINE = "The Webflow-native AI form builder";
 export const APP_DESCRIPTION =
-  "AI-powered multi-step form builder for modern websites";
+  "AI-powered multi-step form builder for modern websites. Describe your form, AI builds it, embed anywhere with one click.";

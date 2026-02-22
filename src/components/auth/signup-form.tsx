@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import { OAuthButtons } from "./oauth-buttons";
 import { Loader2 } from "lucide-react";
+import { Logo } from "@/components/shared/logo";
 
 export function SignupForm() {
   const [fullName, setFullName] = useState("");
@@ -52,8 +53,11 @@ export function SignupForm() {
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="text-center">
+    <Card className="w-full max-w-md gradient-border backdrop-blur-sm bg-card/80">
+      <CardHeader className="text-center space-y-3">
+        <div className="flex justify-center mb-2">
+          <Logo />
+        </div>
         <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
         <CardDescription>
           Start building AI-powered forms in seconds
@@ -68,7 +72,7 @@ export function SignupForm() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
+              <span className="bg-card/80 px-2 text-muted-foreground">
                 Or continue with
               </span>
             </div>
@@ -84,6 +88,7 @@ export function SignupForm() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
+                className="transition-all duration-200 focus:ring-2 focus:ring-purple-500/20"
               />
             </div>
             <div className="space-y-2">
@@ -95,6 +100,7 @@ export function SignupForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="transition-all duration-200 focus:ring-2 focus:ring-purple-500/20"
               />
             </div>
             <div className="space-y-2">
@@ -107,6 +113,7 @@ export function SignupForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 minLength={6}
                 required
+                className="transition-all duration-200 focus:ring-2 focus:ring-purple-500/20"
               />
             </div>
 
@@ -114,7 +121,7 @@ export function SignupForm() {
               <p className="text-sm text-destructive">{error}</p>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 border-0 text-white glow transition-all duration-300" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create Account
             </Button>
@@ -124,7 +131,7 @@ export function SignupForm() {
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/login" className="text-primary hover:underline">
+          <Link href="/login" className="text-purple-500 hover:text-purple-400 transition-colors font-medium">
             Sign in
           </Link>
         </p>

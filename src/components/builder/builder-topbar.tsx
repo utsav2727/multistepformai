@@ -123,7 +123,7 @@ export function BuilderTopbar({
 
     if (lastSaved) {
       return (
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <div className="flex items-center gap-1.5 text-xs text-emerald-600">
           <Cloud className="size-3" />
           <span className="hidden sm:inline">Saved</span>
         </div>
@@ -134,7 +134,7 @@ export function BuilderTopbar({
   };
 
   return (
-    <div className="flex flex-col border-b bg-background">
+    <div className="flex flex-col border-b bg-card/50 backdrop-blur-sm">
       {/* Top row: back, title, status, save, publish */}
       <div className="flex h-14 items-center px-3 sm:px-4 gap-2 sm:gap-4">
         {/* Back button */}
@@ -154,7 +154,7 @@ export function BuilderTopbar({
               onChange={(e) => setEditTitle(e.target.value)}
               onBlur={handleTitleSave}
               onKeyDown={handleTitleKeyDown}
-              className="h-8 text-sm font-semibold w-full max-w-64"
+              className="h-8 text-sm font-semibold w-full max-w-64 transition-all duration-200 focus:ring-2 focus:ring-purple-500/20"
             />
           ) : (
             <button
@@ -162,7 +162,7 @@ export function BuilderTopbar({
                 setEditTitle(title);
                 setIsEditingTitle(true);
               }}
-              className="text-sm font-semibold truncate max-w-40 sm:max-w-64 hover:text-primary transition-colors cursor-text"
+              className="text-sm font-semibold truncate max-w-40 sm:max-w-64 hover:text-purple-500 transition-colors cursor-text"
               title="Click to edit title"
             >
               {title}
@@ -172,7 +172,7 @@ export function BuilderTopbar({
           {/* Status badge */}
           <Badge
             variant={status === "published" ? "default" : "secondary"}
-            className="text-[10px] shrink-0 hidden sm:inline-flex"
+            className={`text-[10px] shrink-0 hidden sm:inline-flex ${status === "published" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20" : ""}`}
           >
             {status}
           </Badge>
@@ -212,7 +212,7 @@ export function BuilderTopbar({
           variant={status === "published" ? "outline" : "default"}
           size="sm"
           onClick={onPublishToggle}
-          className="gap-1.5 shrink-0"
+          className={`gap-1.5 shrink-0 ${status !== "published" ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 border-0 text-white transition-all duration-300" : ""}`}
         >
           {status === "published" ? (
             <>
@@ -236,7 +236,7 @@ export function BuilderTopbar({
             variant={activeTab === tab.id ? "secondary" : "ghost"}
             size="sm"
             onClick={() => onTabChange(tab.id)}
-            className="text-xs flex-1 sm:flex-none"
+            className={`text-xs flex-1 sm:flex-none transition-all duration-200 ${activeTab === tab.id ? "bg-purple-500/10 text-purple-700 dark:text-purple-300" : ""}`}
           >
             {tab.label}
           </Button>

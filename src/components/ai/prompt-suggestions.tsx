@@ -50,7 +50,7 @@ export function PromptSuggestions({ onSelect }: PromptSuggestionsProps) {
             variant="outline"
             size="sm"
             onClick={() => onSelect(s.prompt)}
-            className="text-xs"
+            className="text-xs transition-all duration-200 hover:border-purple-300 dark:hover:border-purple-500/30 hover:bg-purple-50 dark:hover:bg-purple-500/10 hover:text-purple-700 dark:hover:text-purple-300"
           >
             {s.label}
           </Button>

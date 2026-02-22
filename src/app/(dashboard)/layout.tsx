@@ -22,7 +22,10 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+          <p className="text-sm text-muted-foreground">Loading...</p>
+        </div>
       </div>
     );
   }
@@ -32,7 +35,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-muted/30">
       {/* Mobile hamburger button */}
       <Button
         variant="ghost"
@@ -46,7 +49,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}

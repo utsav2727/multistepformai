@@ -18,7 +18,7 @@ export function OAuthButtons() {
   return (
     <Button
       variant="outline"
-      className="w-full"
+      className="w-full transition-all duration-200 hover:bg-muted/50 hover:shadow-sm"
       onClick={handleGoogleLogin}
       type="button"
     >

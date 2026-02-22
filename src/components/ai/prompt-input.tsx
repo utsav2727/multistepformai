@@ -67,14 +67,16 @@ export function PromptInput() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Textarea
-          placeholder="Describe the form you want to create... e.g., 'Create a healthcare onboarding form with insurance upload and eligibility questions'"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          rows={4}
-          className="resize-none text-base"
-          disabled={loading}
-        />
+        <div className="rounded-xl border bg-card p-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-purple-500/20 focus-within:border-purple-300 dark:focus-within:border-purple-500/30">
+          <Textarea
+            placeholder="Describe the form you want to create... e.g., 'Create a healthcare onboarding form with insurance upload and eligibility questions'"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            rows={4}
+            className="resize-none text-base border-0 focus-visible:ring-0 bg-transparent"
+            disabled={loading}
+          />
+        </div>
         <div className="flex items-center justify-between">
           <p className="text-xs text-muted-foreground">
             {prompt.length}/2000 characters
@@ -83,6 +85,7 @@ export function PromptInput() {
             onClick={handleGenerate}
             disabled={loading || prompt.trim().length < 10}
             size="lg"
+            className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 border-0 text-white glow transition-all duration-300"
           >
             {loading ? (
               <>
@@ -104,9 +107,10 @@ export function PromptInput() {
       {loading && (
         <div className="flex flex-col items-center gap-3 py-8">
           <div className="relative">
-            <Sparkles className="h-8 w-8 animate-pulse text-primary" />
+            <div className="absolute inset-0 h-8 w-8 rounded-full bg-purple-500/20 animate-ping" />
+            <Sparkles className="relative h-8 w-8 animate-pulse text-purple-500" />
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm font-medium text-foreground">
             AI is designing your form...
           </p>
           <p className="text-xs text-muted-foreground">

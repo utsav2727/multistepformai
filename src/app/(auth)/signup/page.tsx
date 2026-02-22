@@ -1,7 +1,7 @@
 import { SignupForm } from "@/components/auth/signup-form";
 
 export const metadata = {
-  title: "Sign Up - formAI",
+  title: "Sign Up — formAI",
 };
 
 export default function SignupPage() {

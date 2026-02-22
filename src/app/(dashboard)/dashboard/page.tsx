@@ -65,7 +65,7 @@ export default function DashboardPage() {
               Create and manage your AI-powered forms.
             </p>
           </div>
-          <Button asChild className="w-full sm:w-auto">
+          <Button asChild className="w-full sm:w-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 border-0 text-white transition-all duration-300">
             <Link href="/dashboard/new">
               <Plus className="h-4 w-4" />
               New Form
@@ -76,7 +76,7 @@ export default function DashboardPage() {
         {loading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="space-y-3 rounded-xl border p-6">
+              <div key={i} className="space-y-3 rounded-xl border p-6 animate-pulse">
                 <Skeleton className="h-5 w-3/4" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-1/2" />

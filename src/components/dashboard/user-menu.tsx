@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { LogOut, Settings, User } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 
 export function UserMenu() {
@@ -28,7 +28,7 @@ export function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-xs font-medium text-white">
             {initials}
           </div>
           <span className="hidden text-sm md:inline-block">{email}</span>

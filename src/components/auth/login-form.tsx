@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import { OAuthButtons } from "./oauth-buttons";
 import { Loader2 } from "lucide-react";
+import { Logo } from "@/components/shared/logo";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -49,8 +50,11 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="text-center">
+    <Card className="w-full max-w-md gradient-border backdrop-blur-sm bg-card/80">
+      <CardHeader className="text-center space-y-3">
+        <div className="flex justify-center mb-2">
+          <Logo />
+        </div>
         <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
         <CardDescription>Sign in to your formAI account</CardDescription>
       </CardHeader>
@@ -63,7 +67,7 @@ export function LoginForm() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
+              <span className="bg-card/80 px-2 text-muted-foreground">
                 Or continue with
               </span>
             </div>
@@ -79,6 +83,7 @@ export function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="transition-all duration-200 focus:ring-2 focus:ring-purple-500/20"
               />
             </div>
             <div className="space-y-2">
@@ -86,7 +91,7 @@ export function LoginForm() {
                 <Label htmlFor="password">Password</Label>
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-muted-foreground hover:text-primary"
+                  className="text-sm text-muted-foreground hover:text-purple-500 transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -98,6 +103,7 @@ export function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="transition-all duration-200 focus:ring-2 focus:ring-purple-500/20"
               />
             </div>
 
@@ -105,7 +111,7 @@ export function LoginForm() {
               <p className="text-sm text-destructive">{error}</p>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 border-0 text-white glow transition-all duration-300" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sign In
             </Button>
@@ -115,7 +121,7 @@ export function LoginForm() {
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-primary hover:underline">
+          <Link href="/signup" className="text-purple-500 hover:text-purple-400 transition-colors font-medium">
             Sign up
           </Link>
         </p>

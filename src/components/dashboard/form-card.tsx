@@ -53,7 +53,7 @@ function statusVariant(
 
 export function FormCard({ form, onDuplicate, onDelete }: FormCardProps) {
   return (
-    <Card className="group relative transition-shadow hover:shadow-md">
+    <Card className="group relative transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/5 hover:-translate-y-0.5">
       <Link
         href={`/builder/${form.id}`}
         className="absolute inset-0 z-0"
@@ -139,7 +139,7 @@ export function FormCard({ form, onDuplicate, onDelete }: FormCardProps) {
       <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-2 sm:gap-3">
-            <Badge variant={statusVariant(form.status)} className="text-[10px]">
+            <Badge variant={statusVariant(form.status)} className={`text-[10px] ${form.status === "published" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20" : ""}`}>
               {form.status}
             </Badge>
             <span>{form.submission_count} submissions</span>
