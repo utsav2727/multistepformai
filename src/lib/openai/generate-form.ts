@@ -3,6 +3,40 @@ import { FORM_GENERATION_SYSTEM_PROMPT } from "./prompts";
 import { formSchemaSchema } from "@/lib/form-schema/validation";
 import type { GenerateFormResponse } from "@/lib/form-schema/types";
 
+const VALID_VALIDATION_TYPES = new Set([
+  "required", "min_length", "max_length", "min", "max", "pattern", "file_size", "file_types",
+]);
+
+const VALID_CONJUNCTIONS = new Set(["and", "or"]);
+const VALID_ACTIONS = new Set(["show", "hide", "skip_to_step", "require"]);
+const VALID_OPERATORS = new Set([
+  "equals", "not_equals", "contains", "not_contains", "greater_than", "less_than", "is_empty", "is_not_empty",
+]);
+
+function sanitizeSchema(schema: GenerateFormResponse["schema"]): GenerateFormResponse["schema"] {
+  return {
+    ...schema,
+    steps: schema.steps.map((step) => ({
+      ...step,
+      fields: step.fields.map((field) => ({
+        ...field,
+        validation: (field.validation ?? []).filter(
+          (rule) => VALID_VALIDATION_TYPES.has(rule.type)
+        ),
+      })),
+    })),
+    logicRules: (schema.logicRules ?? []).filter((rule) => {
+      return (
+        Array.isArray(rule.conditions) &&
+        rule.conditions.every((c) => c.fieldId && VALID_OPERATORS.has(c.operator)) &&
+        VALID_CONJUNCTIONS.has(rule.conjunction) &&
+        VALID_ACTIONS.has(rule.action) &&
+        typeof rule.targetId === "string"
+      );
+    }),
+  };
+}
+
 function normalizeResponse(raw: Record<string, unknown>): GenerateFormResponse {
   // If the response already has the correct structure
   if (raw.title && raw.schema && typeof raw.schema === "object") {
@@ -67,6 +101,7 @@ export async function generateForm(
   console.log("AI response keys:", Object.keys(parsed));
 
   const normalized = normalizeResponse(parsed);
+  normalized.schema = sanitizeSchema(normalized.schema);
 
   // Ensure each field has required arrays/defaults
   for (const step of normalized.schema.steps) {
