@@ -11,6 +11,7 @@ import type {
 import {
   createDefaultStep,
   createDefaultField,
+  generateId,
 } from "@/lib/form-schema/defaults";
 
 export interface FormBuilderState {
@@ -31,6 +32,7 @@ export interface UseFormBuilderReturn extends FormBuilderState {
   // Field operations
   addField: (stepId: string, fieldType: FieldType) => void;
   removeField: (stepId: string, fieldId: string) => void;
+  duplicateField: (stepId: string, fieldId: string) => void;
   updateField: (
     stepId: string,
     fieldId: string,
@@ -174,6 +176,35 @@ export function useFormBuilder(
           ),
         },
         selectedFieldId: wasSelected ? null : prev.selectedFieldId,
+        isDirty: true,
+      };
+    });
+  }, []);
+
+  const duplicateField = useCallback((stepId: string, fieldId: string) => {
+    setState((prev) => {
+      const step = prev.schema.steps.find((s) => s.id === stepId);
+      if (!step) return prev;
+      const fieldIndex = step.fields.findIndex((f) => f.id === fieldId);
+      if (fieldIndex === -1) return prev;
+      const original = step.fields[fieldIndex];
+      const duplicate: FormField = {
+        ...original,
+        id: generateId("field"),
+        label: `${original.label} (copy)`,
+        logicRules: [],
+      };
+      const fields = [...step.fields];
+      fields.splice(fieldIndex + 1, 0, duplicate);
+      return {
+        ...prev,
+        schema: {
+          ...prev.schema,
+          steps: prev.schema.steps.map((s) =>
+            s.id === stepId ? { ...s, fields } : s
+          ),
+        },
+        selectedFieldId: duplicate.id,
         isDirty: true,
       };
     });
@@ -324,6 +355,7 @@ export function useFormBuilder(
     updateStep,
     addField,
     removeField,
+    duplicateField,
     updateField,
     reorderFields,
     selectStep,

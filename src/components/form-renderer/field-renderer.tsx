@@ -13,6 +13,9 @@ import { RadioField } from "./fields/radio-field";
 import { CheckboxField } from "./fields/checkbox-field";
 import { FileUploadField } from "./fields/file-upload-field";
 import { RatingField } from "./fields/rating-field";
+import { SliderField } from "./fields/slider-field";
+import { HiddenField } from "./fields/hidden-field";
+import { SignatureField } from "./fields/signature-field";
 
 export interface FieldProps {
   field: FormField;
@@ -49,6 +52,12 @@ export function FieldRenderer(props: FieldProps) {
       return <FileUploadField {...props} />;
     case "rating":
       return <RatingField {...props} />;
+    case "slider":
+      return <SliderField {...props} />;
+    case "hidden":
+      return <HiddenField {...props} />;
+    case "signature":
+      return <SignatureField {...props} />;
     default:
       return (
         <div className="text-muted-foreground text-sm">

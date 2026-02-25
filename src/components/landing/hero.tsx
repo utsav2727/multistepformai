@@ -89,7 +89,7 @@ export function Hero() {
           >
             <div className="inline-flex items-center gap-2 rounded-full border border-purple-200 dark:border-purple-500/20 bg-purple-50 dark:bg-purple-500/10 px-3 sm:px-4 py-1.5 text-xs sm:text-sm text-purple-700 dark:text-purple-300">
               <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="font-medium">AI-powered form generation</span>
+              <span className="font-medium">The Webflow-native AI form builder</span>
             </div>
           </motion.div>
 
@@ -100,9 +100,9 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Build forms with AI.
+            AI-powered forms
             <br />
-            <span className="text-gradient">Embed anywhere.</span>
+            <span className="text-gradient">for modern websites.</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -112,9 +112,9 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            Describe your form in plain English. AI generates a beautiful
-            multi-step form in seconds. Customize and embed it on any website
-            with one click.
+            Describe your form in plain English. AI generates a production-ready
+            multi-step form with logic and validation. Embed it on Webflow,
+            Framer, or any site in seconds.
           </motion.p>
 
           {/* CTA Buttons */}

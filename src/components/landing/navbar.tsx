@@ -23,6 +23,12 @@ export function Navbar() {
         {/* Desktop nav */}
         <nav className="hidden items-center gap-6 md:flex">
           <Link
+            href="#how-it-works"
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            How It Works
+          </Link>
+          <Link
             href="#features"
             className="text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
@@ -66,6 +72,13 @@ export function Navbar() {
           transition={{ duration: 0.2 }}
         >
           <nav className="flex flex-col gap-3">
+            <Link
+              href="#how-it-works"
+              className="text-sm text-muted-foreground hover:text-foreground py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              How It Works
+            </Link>
             <Link
               href="#features"
               className="text-sm text-muted-foreground hover:text-foreground py-2"

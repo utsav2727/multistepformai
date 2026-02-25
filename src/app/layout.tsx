@@ -18,19 +18,30 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "formAI — The Webflow-Native AI Form Builder",
   description:
-    "AI-powered multi-step form builder for modern websites. Describe your form, AI builds it, embed anywhere with one click.",
+    "AI-powered multi-step form builder for modern websites. Describe your form in plain English, AI generates it, embed anywhere with one click.",
+  keywords: [
+    "AI form builder",
+    "Webflow forms",
+    "multi-step forms",
+    "form builder",
+    "conditional logic forms",
+    "embed forms",
+    "no-code forms",
+  ],
   openGraph: {
     title: "formAI — The Webflow-Native AI Form Builder",
     description:
-      "AI-powered multi-step form builder for modern websites. Describe your form, AI builds it, embed anywhere with one click.",
+      "AI-powered multi-step form builder for modern websites. Describe your form in plain English, AI generates it, embed anywhere with one click.",
     siteName: "formAI",
     type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "formAI" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "formAI — The Webflow-Native AI Form Builder",
     description:
-      "AI-powered multi-step form builder for modern websites. Describe your form, AI builds it, embed anywhere with one click.",
+      "AI-powered multi-step form builder for modern websites. Describe your form in plain English, AI generates it, embed anywhere with one click.",
+    images: ["/og-image.png"],
   },
 };
 

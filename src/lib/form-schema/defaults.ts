@@ -63,6 +63,14 @@ export function createDefaultField(type: FieldType): FormField {
       base.maxFiles = 1;
       base.allowedFileTypes = [".pdf", ".jpg", ".png", ".doc", ".docx"];
       break;
+    case "slider":
+      base.min = 0;
+      base.max = 100;
+      base.step = 1;
+      break;
+    case "hidden":
+      base.placeholder = "";
+      break;
   }
 
   return base;
@@ -122,6 +130,9 @@ function getDefaultLabel(type: FieldType): string {
     checkbox: "Agree to terms",
     file_upload: "Upload File",
     rating: "Rating",
+    slider: "Slider",
+    hidden: "utm_source",
+    signature: "Signature",
   };
   return labels[type];
 }

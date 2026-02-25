@@ -10,6 +10,7 @@ import {
   ArrowDown,
   Trash2,
   Asterisk,
+  Copy,
   Type,
   Mail,
   Phone,
@@ -22,6 +23,9 @@ import {
   CheckSquare,
   Upload,
   Star,
+  SlidersHorizontal,
+  EyeOff,
+  PenLine,
 } from "lucide-react";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -37,6 +41,9 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   CheckSquare,
   Upload,
   Star,
+  SlidersHorizontal,
+  EyeOff,
+  PenLine,
 };
 
 interface FieldItemProps {
@@ -48,6 +55,7 @@ interface FieldItemProps {
   onMoveUp: () => void;
   onMoveDown: () => void;
   onDelete: () => void;
+  onDuplicate: () => void;
 }
 
 export function FieldItem({
@@ -59,9 +67,10 @@ export function FieldItem({
   onMoveUp,
   onMoveDown,
   onDelete,
+  onDuplicate,
 }: FieldItemProps) {
   const fieldInfo = FIELD_REGISTRY[field.type];
-  const IconComponent = ICON_MAP[fieldInfo.icon];
+  const IconComponent = fieldInfo ? ICON_MAP[fieldInfo.icon] : null;
 
   return (
     <div
@@ -88,7 +97,7 @@ export function FieldItem({
         </div>
         <div className="flex items-center gap-1.5 mt-0.5">
           <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-            {fieldInfo.label}
+            {fieldInfo?.label ?? field.type}
           </Badge>
           {field.description && (
             <span className="text-[11px] text-muted-foreground truncate">
@@ -122,6 +131,17 @@ export function FieldItem({
           title="Move down"
         >
           <ArrowDown className="size-3" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDuplicate();
+          }}
+          title="Duplicate field (Ctrl+D)"
+        >
+          <Copy className="size-3" />
         </Button>
         <Button
           variant="ghost"

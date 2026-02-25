@@ -9,6 +9,7 @@ import { StepRenderer } from "./step-renderer";
 import { StepNavigation } from "./step-navigation";
 import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
+import { AnimatePresence, motion } from "framer-motion";
 
 export interface FormRendererProps {
   schema: FormSchema;
@@ -18,10 +19,23 @@ export interface FormRendererProps {
   themeOverrides?: ThemeOverrides;
 }
 
+const stepVariants = {
+  enter: (direction: number) => ({ x: direction > 0 ? 40 : -40, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (direction: number) => ({ x: direction > 0 ? -40 : 40, opacity: 0 }),
+};
+
 export function FormRenderer({ schema, settings, submitUrl, onSubmitted, themeOverrides }: FormRendererProps) {
   const form = useFormRenderer(schema);
   const onSubmittedRef = useRef(onSubmitted);
   onSubmittedRef.current = onSubmitted;
+
+  const prevStepRef = useRef(form.currentStepIndex);
+  const directionRef = useRef(1);
+  if (prevStepRef.current !== form.currentStepIndex) {
+    directionRef.current = form.currentStepIndex > prevStepRef.current ? 1 : -1;
+    prevStepRef.current = form.currentStepIndex;
+  }
 
   useEffect(() => {
     if (form.isSubmitted) {
@@ -52,17 +66,31 @@ export function FormRenderer({ schema, settings, submitUrl, onSubmitted, themeOv
         />
       )}
 
-      {form.currentStep && (
-        <StepRenderer
-          step={form.currentStep}
-          visibleFields={form.visibleFields}
-          values={form.values}
-          errors={form.errors}
-          touched={form.touched}
-          onValueChange={form.setValue}
-          onFieldBlur={form.setTouched}
-        />
-      )}
+      <div className="overflow-hidden">
+        <AnimatePresence mode="wait" custom={directionRef.current}>
+          {form.currentStep && (
+            <motion.div
+              key={form.currentStep.id}
+              custom={directionRef.current}
+              variants={stepVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+            >
+              <StepRenderer
+                step={form.currentStep}
+                visibleFields={form.visibleFields}
+                values={form.values}
+                errors={form.errors}
+                touched={form.touched}
+                onValueChange={form.setValue}
+                onFieldBlur={form.setTouched}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {form.submitError && (
         <FormError message={form.submitError} />

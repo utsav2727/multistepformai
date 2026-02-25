@@ -133,31 +133,31 @@
 **Goal:** Make the existing product feel complete and professional.
 
 #### 1.1 Rebranding & Landing Page
-- [ ] Update hero section: "AI-powered multi-step form builder for modern websites"
-- [ ] Rewrite feature descriptions to emphasize AI-first positioning
-- [ ] Add "How It Works" section (Prompt → AI Generates → Customize → Embed)
-- [ ] Update pricing tiers to match spec ($0 / $19 / $49)
-- [ ] Add SEO meta tags, OG image, favicon
-- [ ] Add social proof section (testimonials/logos placeholder)
-- [ ] Update footer with proper links (docs, blog, support, social)
+- [x] Update hero section: "AI-powered multi-step form builder for modern websites"
+- [x] Rewrite feature descriptions to emphasize AI-first positioning
+- [x] Add "How It Works" section (Prompt → AI Generates → Customize → Embed)
+- [x] Update pricing tiers to match spec ($0 / $19 / $49)
+- [x] Add SEO meta tags, OG image, favicon
+- [x] Add social proof section (testimonials/logos placeholder)
+- [x] Update footer with proper links (docs, blog, support, social)
 
 #### 1.2 Builder Polish
 - [ ] Fix drag & drop reorder UX (smooth animations)
 - [ ] Add mobile preview mode in builder
-- [ ] Add field duplication
+- [x] Add field duplication
 - [ ] Improve step sidebar UX
 - [ ] Add keyboard shortcuts in builder
 
 #### 1.3 Form Renderer Polish
-- [ ] Add step transition animations (slide/fade)
+- [x] Add step transition animations (slide/fade)
 - [ ] One-question-per-screen mode option
 - [ ] Improve mobile responsiveness
 - [ ] Add form loading skeleton
 
 #### 1.4 Missing Field Types
-- [ ] Slider / Range field
-- [ ] Hidden fields (UTM tracking support)
-- [ ] Signature field (canvas-based)
+- [x] Slider / Range field
+- [x] Hidden fields (UTM tracking support)
+- [x] Signature field (canvas-based)
 
 **Trigger command:**
 ```

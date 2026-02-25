@@ -31,6 +31,8 @@ import {
   Check,
   ExternalLink,
   AlertCircle,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -45,7 +47,7 @@ function SettingsPanel({ builder }: { builder: UseFormBuilderReturn }) {
   const { settings, updateSettings } = builder;
 
   return (
-    <ScrollArea className="flex-1">
+    <ScrollArea className="flex-1 min-h-0 h-full w-full">
       <div className="mx-auto max-w-2xl space-y-8 p-4 sm:p-6">
         {/* Theme */}
         <ThemeEditor
@@ -263,7 +265,7 @@ function EmbedPanel({
 
   if (formStatus !== "published") {
     return (
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 min-h-0 h-full w-full">
         <div className="mx-auto max-w-2xl p-4 sm:p-6">
           <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center space-y-3">
             <AlertCircle className="size-8 text-muted-foreground" />
@@ -279,7 +281,7 @@ function EmbedPanel({
   }
 
   return (
-    <ScrollArea className="flex-1">
+    <ScrollArea className="flex-1 min-h-0 h-full w-full">
       <div className="mx-auto max-w-2xl space-y-6 p-4 sm:p-6">
         <div>
           <h3 className="text-lg font-semibold">Share & Embed</h3>
@@ -447,10 +449,11 @@ export function BuilderLayout({
   formStatus,
 }: BuilderLayoutProps) {
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>("fields");
+  const [stepsOpen, setStepsOpen] = useState(true);
 
   if (activeTab === "preview") {
     return (
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
         <PreviewPanel schema={builder.schema} settings={builder.settings} />
       </div>
     );
@@ -458,7 +461,7 @@ export function BuilderLayout({
 
   if (activeTab === "embed" && formId) {
     return (
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
         <EmbedPanel
           formId={formId}
           formStatus={formStatus || "draft"}
@@ -470,7 +473,7 @@ export function BuilderLayout({
 
   if (activeTab === "settings") {
     return (
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
         <SettingsPanel builder={builder} />
       </div>
     );
@@ -478,7 +481,7 @@ export function BuilderLayout({
 
   // Editor tab (default)
   return (
-    <div className="flex flex-1 flex-col overflow-hidden">
+    <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
       {/* Mobile panel selector - visible only on small screens */}
       <div className="flex border-b md:hidden">
         <Button
@@ -512,20 +515,54 @@ export function BuilderLayout({
         )}
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left sidebar: Steps - always visible on desktop, toggled on mobile */}
-        <div className={`${mobilePanel === "steps" ? "flex" : "hidden"} md:flex w-full md:w-auto`}>
-          <StepSidebar
-            steps={builder.schema.steps}
-            selectedStepId={builder.selectedStepId}
-            onSelectStep={(stepId) => {
-              builder.selectStep(stepId);
-              setMobilePanel("fields");
-            }}
-            onAddStep={builder.addStep}
-            onRemoveStep={builder.removeStep}
-            onReorderSteps={builder.reorderSteps}
-          />
+      <div className="flex flex-1 min-h-0 overflow-hidden">
+        {/* Left sidebar: Steps - collapsible on desktop, toggled on mobile */}
+        <div className={`${mobilePanel === "steps" ? "flex" : "hidden"} md:flex shrink-0`}>
+          {stepsOpen ? (
+            <StepSidebar
+              steps={builder.schema.steps}
+              selectedStepId={builder.selectedStepId}
+              onSelectStep={(stepId) => {
+                builder.selectStep(stepId);
+                setMobilePanel("fields");
+              }}
+              onAddStep={builder.addStep}
+              onRemoveStep={builder.removeStep}
+              onReorderSteps={builder.reorderSteps}
+              onCollapse={() => setStepsOpen(false)}
+            />
+          ) : (
+            <div className="hidden md:flex flex-col items-center gap-2 border-r bg-muted/30 px-1.5 py-3 w-10">
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                onClick={() => setStepsOpen(true)}
+                title="Expand steps panel"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <PanelLeftOpen className="size-4" />
+              </Button>
+              <div className="flex flex-col items-center gap-1 mt-1">
+                {builder.schema.steps.map((step, index) => (
+                  <button
+                    key={step.id}
+                    onClick={() => {
+                      builder.selectStep(step.id);
+                      setStepsOpen(true);
+                    }}
+                    title={step.title}
+                    className={`w-6 h-6 rounded text-[10px] font-semibold flex items-center justify-center transition-colors ${
+                      step.id === builder.selectedStepId
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted hover:bg-muted-foreground/20 text-muted-foreground"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Center: Field list - always visible on desktop, toggled on mobile */}
@@ -539,6 +576,7 @@ export function BuilderLayout({
             }}
             onAddField={builder.addField}
             onRemoveField={builder.removeField}
+            onDuplicateField={builder.duplicateField}
             onReorderFields={builder.reorderFields}
           />
         </div>

@@ -10,7 +10,10 @@ export type FieldType =
   | "radio"
   | "checkbox"
   | "file_upload"
-  | "rating";
+  | "rating"
+  | "slider"
+  | "hidden"
+  | "signature";
 
 export interface ValidationRule {
   type:

@@ -12,7 +12,7 @@ interface PreviewPanelProps {
 
 export function PreviewPanel({ schema, settings }: PreviewPanelProps) {
   return (
-    <ScrollArea className="flex-1">
+    <ScrollArea className="flex-1 min-h-0 h-full w-full">
       <div className="flex flex-col items-center p-4 sm:p-6">
         <div className="w-full max-w-2xl">
           <div className="mb-4 flex items-center justify-center">

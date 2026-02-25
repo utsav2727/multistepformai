@@ -135,7 +135,7 @@ export function FieldEditor({
         </p>
       </div>
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 min-h-0 h-full">
         <div className="space-y-4 p-4">
           {/* Label */}
           <div className="space-y-1.5">
@@ -172,7 +172,9 @@ export function FieldEditor({
           {field.type !== "checkbox" &&
             field.type !== "radio" &&
             field.type !== "file_upload" &&
-            field.type !== "rating" && (
+            field.type !== "rating" &&
+            field.type !== "slider" &&
+            field.type !== "signature" && (
               <div className="space-y-1.5">
                 <Label htmlFor="field-placeholder" className="text-xs">
                   Placeholder
@@ -435,6 +437,73 @@ export function FieldEditor({
                     </p>
                   </div>
                 </div>
+              </div>
+              <Separator />
+            </>
+          )}
+
+          {/* Slider-specific options */}
+          {field.type === "slider" && (
+            <>
+              <div className="space-y-3">
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Slider Settings
+                </Label>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="space-y-1">
+                    <Label htmlFor="slider-min" className="text-xs">Min</Label>
+                    <Input
+                      id="slider-min"
+                      type="number"
+                      value={field.min ?? 0}
+                      onChange={(e) => update({ min: Number(e.target.value) })}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="slider-max" className="text-xs">Max</Label>
+                    <Input
+                      id="slider-max"
+                      type="number"
+                      value={field.max ?? 100}
+                      onChange={(e) => update({ max: Number(e.target.value) })}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="slider-step" className="text-xs">Step</Label>
+                    <Input
+                      id="slider-step"
+                      type="number"
+                      min={1}
+                      value={field.step ?? 1}
+                      onChange={(e) => update({ step: Number(e.target.value) || 1 })}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
+              <Separator />
+            </>
+          )}
+
+          {/* Hidden field options */}
+          {field.type === "hidden" && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="hidden-default" className="text-xs">
+                  Default Value
+                </Label>
+                <Input
+                  id="hidden-default"
+                  value={field.placeholder || ""}
+                  onChange={(e) => update({ placeholder: e.target.value })}
+                  placeholder="e.g. utm_source or a static value"
+                  className="h-8 text-xs"
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Auto-filled from URL parameter matching the field label (e.g. utm_source). Falls back to this value.
+                </p>
               </div>
               <Separator />
             </>

@@ -106,6 +106,30 @@ export const FIELD_REGISTRY: Record<FieldType, FieldTypeInfo> = {
     hasOptions: false,
     category: "advanced",
   },
+  slider: {
+    type: "slider",
+    label: "Slider",
+    description: "Range slider with min/max",
+    icon: "SlidersHorizontal",
+    hasOptions: false,
+    category: "advanced",
+  },
+  hidden: {
+    type: "hidden",
+    label: "Hidden Field",
+    description: "Invisible field for UTM tracking",
+    icon: "EyeOff",
+    hasOptions: false,
+    category: "advanced",
+  },
+  signature: {
+    type: "signature",
+    label: "Signature",
+    description: "Canvas-based signature input",
+    icon: "PenLine",
+    hasOptions: false,
+    category: "advanced",
+  },
 };
 
 export const FIELD_TYPES_BY_CATEGORY = {

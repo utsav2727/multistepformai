@@ -12,6 +12,7 @@ interface FieldListProps {
   onSelectField: (fieldId: string | null) => void;
   onAddField: (stepId: string, fieldType: FieldType) => void;
   onRemoveField: (stepId: string, fieldId: string) => void;
+  onDuplicateField: (stepId: string, fieldId: string) => void;
   onReorderFields: (stepId: string, fromIndex: number, toIndex: number) => void;
 }
 
@@ -21,6 +22,7 @@ export function FieldList({
   onSelectField,
   onAddField,
   onRemoveField,
+  onDuplicateField,
   onReorderFields,
 }: FieldListProps) {
   if (!step) {
@@ -36,7 +38,7 @@ export function FieldList({
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 min-h-0 flex-col">
       <div className="border-b px-6 py-3">
         <h2 className="text-base font-semibold">{step.title}</h2>
         {step.description && (
@@ -46,7 +48,7 @@ export function FieldList({
         )}
       </div>
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 min-h-0 h-full">
         <div className="flex flex-col gap-2 p-6">
           {step.fields.length === 0 ? (
             <div className="rounded-lg border border-dashed border-border p-8 text-center">
@@ -68,10 +70,9 @@ export function FieldList({
                   isSelected={field.id === selectedFieldId}
                   onSelect={() => onSelectField(field.id)}
                   onMoveUp={() => onReorderFields(step.id, index, index - 1)}
-                  onMoveDown={() =>
-                    onReorderFields(step.id, index, index + 1)
-                  }
+                  onMoveDown={() => onReorderFields(step.id, index, index + 1)}
                   onDelete={() => onRemoveField(step.id, field.id)}
+                  onDuplicate={() => onDuplicateField(step.id, field.id)}
                 />
               ))}
               <div className="mt-2">
