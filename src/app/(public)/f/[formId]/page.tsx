@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { FormRenderer } from "@/components/form-renderer/form-renderer";
+import { ViewTracker } from "@/components/form-renderer/view-tracker";
 import { buildThemeCSSVars } from "@/lib/theme-utils";
 import type { FormSchema, FormSettings } from "@/lib/form-schema/types";
 
@@ -30,6 +31,7 @@ export default async function PublicFormPage({ params }: PublicFormPageProps) {
       className="min-h-screen flex items-center justify-center p-3 sm:p-4"
       style={buildThemeCSSVars(settings.theme)}
     >
+      <ViewTracker formId={formId} />
       <div className="w-full max-w-2xl">
         <div className="mb-6 sm:mb-8 text-center">
           {settings.theme.logoUrl && (

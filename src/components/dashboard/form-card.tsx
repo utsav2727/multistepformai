@@ -136,7 +136,7 @@ export function FormCard({ form, onDuplicate, onDelete }: FormCardProps) {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+      <CardContent className="p-4 sm:p-6">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-2 sm:gap-3">
             <Badge variant={statusVariant(form.status)} className={`text-[10px] ${form.status === "published" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20" : ""}`}>

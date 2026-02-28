@@ -104,6 +104,7 @@ export function createDefaultSettings(): FormSettings {
     behavior: {
       showProgressBar: true,
       showStepNumbers: true,
+      oneQuestionPerScreen: false,
       submitButtonText: "Submit",
       successMessage: "Thank you for your submission!",
       successRedirectUrl: null,
@@ -112,6 +113,7 @@ export function createDefaultSettings(): FormSettings {
     notifications: {
       emailOnSubmission: false,
       notificationEmail: null,
+      slackWebhookUrl: null,
     },
   };
 }

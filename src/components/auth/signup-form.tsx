@@ -53,8 +53,8 @@ export function SignupForm() {
   };
 
   return (
-    <Card className="w-full max-w-md gradient-border backdrop-blur-sm bg-card/80">
-      <CardHeader className="text-center space-y-3">
+    <Card className="border-2 border-r-amber-400 min-w-lg gradient-border backdrop-blur-sm bg-card/80">
+      <CardHeader className="px-8 pt-8 pb-2 text-center space-y-3">
         <div className="flex justify-center mb-2">
           <Logo />
         </div>
@@ -63,7 +63,7 @@ export function SignupForm() {
           Start building AI-powered forms in seconds
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-8 pb-2">
         <div className="space-y-4">
           <OAuthButtons />
 
@@ -128,7 +128,7 @@ export function SignupForm() {
           </form>
         </div>
       </CardContent>
-      <CardFooter className="justify-center">
+      <CardFooter className="px-8 pb-8 justify-center">
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
           <Link href="/login" className="text-purple-500 hover:text-purple-400 transition-colors font-medium">

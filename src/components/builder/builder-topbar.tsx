@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
-  Check,
   Loader2,
   Cloud,
   CloudOff,
@@ -17,6 +16,8 @@ import {
   Code,
   Share2,
   Copy,
+  BarChart2,
+  Inbox,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -100,6 +101,11 @@ export function BuilderTopbar({
     { id: "preview", label: "Preview" },
     { id: "embed", label: "Embed" },
     { id: "settings", label: "Settings" },
+  ];
+
+  const navLinks = [
+    { href: `/builder/${formId}/submissions`, label: "Submissions", icon: <Inbox className="size-3.5" /> },
+    { href: `/builder/${formId}/analytics`, label: "Analytics", icon: <BarChart2 className="size-3.5" /> },
   ];
 
   const renderSaveStatus = () => {
@@ -228,7 +234,7 @@ export function BuilderTopbar({
         </Button>
       </div>
 
-      {/* Bottom row: tabs */}
+      {/* Bottom row: tabs + nav links */}
       <div className="flex items-center gap-1 px-3 sm:px-4 pb-2">
         {tabs.map((tab) => (
           <Button
@@ -239,6 +245,21 @@ export function BuilderTopbar({
             className={`text-xs flex-1 sm:flex-none transition-all duration-200 ${activeTab === tab.id ? "bg-purple-500/10 text-purple-700 dark:text-purple-300" : ""}`}
           >
             {tab.label}
+          </Button>
+        ))}
+        <div className="flex-1" />
+        {navLinks.map((link) => (
+          <Button
+            key={link.href}
+            variant="ghost"
+            size="sm"
+            asChild
+            className="text-xs gap-1 text-muted-foreground hover:text-foreground"
+          >
+            <Link href={link.href}>
+              {link.icon}
+              <span className="hidden sm:inline">{link.label}</span>
+            </Link>
           </Button>
         ))}
       </div>

@@ -86,7 +86,7 @@ export default function AccountPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4">
+            <CardContent className="p-4 sm:p-6 space-y-4">
               <div className="space-y-2">
                 <Label>Email</Label>
                 <Input value={user?.email ?? ""} disabled className="transition-all duration-200" />
@@ -116,7 +116,7 @@ export default function AccountPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4">
+            <CardContent className="p-4 sm:p-6 space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="current-password">Current Password</Label>
                 <Input
@@ -179,7 +179,7 @@ export default function AccountPage() {
                 Irreversible account actions.
               </CardDescription>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+            <CardContent className="p-4 sm:p-6">
               <Separator className="mb-4" />
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>

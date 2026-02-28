@@ -98,7 +98,7 @@ export default function EmbedPage({
                     iframe.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4">
+                <CardContent className="p-4 sm:p-6 space-y-4">
                   <pre className="overflow-x-auto rounded-md bg-muted p-3 sm:p-4 text-xs sm:text-sm">
                     <code>{iframeCode}</code>
                   </pre>
@@ -132,7 +132,7 @@ export default function EmbedPage({
                     create the form embed.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4">
+                <CardContent className="p-4 sm:p-6 space-y-4">
                   <pre className="overflow-x-auto rounded-md bg-muted p-3 sm:p-4 text-xs sm:text-sm">
                     <code>{scriptCode}</code>
                   </pre>
@@ -165,7 +165,7 @@ export default function EmbedPage({
                     Share this link directly with anyone to access the form.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4">
+                <CardContent className="p-4 sm:p-6 space-y-4">
                   <div className="flex items-center gap-2 rounded-md bg-muted p-3 sm:p-4">
                     <code className="flex-1 text-xs sm:text-sm break-all">
                       {directLink}

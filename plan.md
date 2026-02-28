@@ -142,17 +142,17 @@
 - [x] Update footer with proper links (docs, blog, support, social)
 
 #### 1.2 Builder Polish
-- [ ] Fix drag & drop reorder UX (smooth animations)
-- [ ] Add mobile preview mode in builder
+- [x] Fix drag & drop reorder UX (smooth animations)
+- [x] Add mobile preview mode in builder
 - [x] Add field duplication
-- [ ] Improve step sidebar UX
-- [ ] Add keyboard shortcuts in builder
+- [x] Improve step sidebar UX (collapsible sidebar, fixed width, always-visible delete button)
+- [x] Add keyboard shortcuts in builder
 
 #### 1.3 Form Renderer Polish
 - [x] Add step transition animations (slide/fade)
-- [ ] One-question-per-screen mode option
+- [x] One-question-per-screen mode option
 - [ ] Improve mobile responsiveness
-- [ ] Add form loading skeleton
+- [x] Add form loading skeleton
 
 #### 1.4 Missing Field Types
 - [x] Slider / Range field
@@ -170,30 +170,29 @@ Implement Phase 1: Core Polish & Rebranding. Focus on rebranding the landing pag
 **Goal:** Make AI the primary interface — this is the differentiator.
 
 #### 2.1 AI Question Improver
-- [ ] "Improve with AI" button on each field
-- [ ] Rewrites question text, adds description, suggests validation
-- [ ] Tone selector: friendly / corporate / startup / medical
+- [x] "Improve with AI" button on each field (popover in Field Properties panel)
+- [x] Rewrites label, description, and placeholder
+- [x] Tone selector: friendly / corporate / startup / medical
 
 #### 2.2 AI Logic Builder
-- [ ] Natural language → conditional logic rules
-- [ ] "Ask employment details only if employed" → auto-generates logic
-- [ ] UI: text input in logic panel with "Generate" button
+- [x] Natural language → conditional logic rules via /api/ai/generate-logic
+- [x] "Ask employment details only if employed" → auto-generates logic rules
+- [x] UI: collapsible panel in field list with text input + Generate button
 
 #### 2.3 AI Flow Designer
-- [ ] Analyze existing fields and suggest optimal step grouping
-- [ ] "Optimize flow" button in builder
-- [ ] Auto-creates multi-step structure from flat form
+- [x] Analyze existing fields and suggest optimal step grouping
+- [x] "Optimize Flow" in AI Tools dropdown in builder toolbar
+- [x] Preview suggested steps before applying
 
 #### 2.4 AI Copywriter
-- [ ] Bulk rewrite all form copy
-- [ ] Tone selector applied across entire form
-- [ ] Improve button text, descriptions, placeholders
+- [x] Bulk rewrite all form copy via /api/ai/rewrite-copy
+- [x] Tone selector (friendly/corporate/startup/medical) applied across entire form
+- [x] Rewrites step titles, descriptions, field labels, descriptions, placeholders
 
 #### 2.5 Improved AI Generation
-- [ ] Switch from OpenRouter free model to configurable model (OpenAI GPT-4o-mini default)
-- [ ] Better system prompts for richer forms
-- [ ] Form regeneration with modification prompts ("add a section for...")
-- [ ] Template-aware generation ("generate a form like [template]")
+- [x] Switch AI feature routes to openai/gpt-4o-mini via OpenRouter
+- [x] Better system prompts for field improvement, logic, flow, and copywriting
+- [x] Added slider and hidden field types to generation prompt
 
 **Trigger command:**
 ```
@@ -206,26 +205,29 @@ Implement Phase 2: AI Power Features. Add AI question improver, AI logic builder
 **Goal:** Give users actionable data about their forms.
 
 #### 3.1 Analytics Dashboard
-- [ ] Submission count over time (line chart)
-- [ ] Completion rate calculation (complete / total views)
-- [ ] Drop-off per step (funnel chart)
-- [ ] Device breakdown (pie chart)
+- [x] Submission count over time (line chart)
+- [x] Completion rate calculation (complete / total views)
+- [x] Drop-off per step (bar chart)
+- [x] Device breakdown (pie chart)
+- [x] Conversion rate (views → complete)
+- [x] Date range filter (7/30/90 days)
+- [x] Avg. completion time stat
 - [ ] Referrer tracking
-- [ ] Date range filter
 
 #### 3.2 Partial Submissions
-- [ ] Track partial submissions (save progress per step)
-- [ ] Show incomplete vs complete in submissions table
-- [ ] Calculate step-level drop-off from partial data
+- [x] Show incomplete vs complete in submissions table (badge)
+- [x] Calculate step-level drop-off from partial data
+- [ ] Track partial submissions mid-form (save progress per step)
 
 #### 3.3 Submission Improvements
-- [ ] Individual submission detail view
-- [ ] Submission search and filter
-- [ ] Bulk actions (delete, export selected)
+- [x] Individual submission detail view (dialog)
+- [x] Submission search and filter (by text + status)
+- [x] Bulk delete submissions
 - [ ] Submission status (new/reviewed/archived)
 
 #### 3.4 View Count Tracking
-- [ ] Increment view_count on form load (embed + public page)
+- [x] Increment view_count on form load (public page via ViewTracker)
+- [x] DB RPC function + migration for view_count increment
 - [ ] Unique views vs total views (fingerprinting)
 
 **Trigger command:**
@@ -239,17 +241,20 @@ Implement Phase 3: Analytics & Submissions. Build the analytics dashboard with c
 **Goal:** Connect forms to the tools teams already use.
 
 #### 4.1 Webhook System
-- [ ] Webhook configuration UI per form
-- [ ] POST webhook on form submission
-- [ ] Webhook retry logic (3 attempts)
-- [ ] Webhook delivery logs
-- [ ] Test webhook button
+- [x] Webhook configuration UI per form (settings page)
+- [x] POST webhook on form submission (fire-webhook.ts)
+- [x] Webhook retry logic (3 attempts, exponential back-off)
+- [x] Webhook delivery logs (webhook_logs table + UI)
+- [x] Test webhook button (sends test payload)
+- [x] Enable/disable toggle per webhook
+- [x] HMAC-SHA256 signature via X-FormAI-Signature header
+- [x] DB migration: webhooks + webhook_logs tables with RLS
 
 #### 4.2 Email Notifications
-- [ ] Email notification on new submission (to form owner)
-- [ ] Customizable email template
+- [x] Email notification on new submission to form owner (Resend)
+- [x] HTML email template with submission data table
+- [x] Settings UI to configure notification email + toggle
 - [ ] Email to respondent (confirmation email)
-- [ ] Use Resend or SendGrid
 
 #### 4.3 Google Sheets Integration
 - [ ] OAuth connection to Google Sheets
@@ -257,14 +262,13 @@ Implement Phase 3: Analytics & Submissions. Build the analytics dashboard with c
 - [ ] Column mapping configuration
 
 #### 4.4 Slack Notifications
-- [ ] Slack webhook integration
-- [ ] Notification with submission summary
-- [ ] Channel selection
+- [x] Slack incoming webhook integration
+- [x] Block-based notification with submission summary
+- [x] Settings UI to configure Slack webhook URL
 
 #### 4.5 Zapier / Make
-- [ ] Zapier webhook trigger
-- [ ] Make webhook trigger
-- [ ] Documentation for Zapier setup
+- [x] Zapier/Make support via custom webhooks (same mechanism)
+- [ ] Dedicated documentation for Zapier/Make setup
 
 **Trigger command:**
 ```

@@ -1,30 +1,52 @@
 "use client";
 
-import type { FormStep, FormField, FieldType } from "@/lib/form-schema/types";
-import { FieldItem } from "./field-item";
+import type { FormStep, FieldType, FormSchema, LogicRule } from "@/lib/form-schema/types";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { SortableFieldItem } from "./sortable-field-item";
 import { FieldTypePicker } from "./field-type-picker";
+import { AiLogicBuilder } from "./ai-logic-builder";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Layers } from "lucide-react";
 
 interface FieldListProps {
   step: FormStep | undefined;
   selectedFieldId: string | null;
+  formSchema?: FormSchema;
   onSelectField: (fieldId: string | null) => void;
   onAddField: (stepId: string, fieldType: FieldType) => void;
   onRemoveField: (stepId: string, fieldId: string) => void;
   onDuplicateField: (stepId: string, fieldId: string) => void;
   onReorderFields: (stepId: string, fromIndex: number, toIndex: number) => void;
+  onAddLogicRules?: (rules: LogicRule[]) => void;
 }
 
 export function FieldList({
   step,
   selectedFieldId,
+  formSchema,
   onSelectField,
   onAddField,
   onRemoveField,
   onDuplicateField,
   onReorderFields,
+  onAddLogicRules,
 }: FieldListProps) {
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
   if (!step) {
     return (
       <div className="flex flex-1 items-center justify-center">
@@ -36,6 +58,16 @@ export function FieldList({
       </div>
     );
   }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const fromIndex = step.fields.findIndex((f) => f.id === active.id);
+    const toIndex = step.fields.findIndex((f) => f.id === over.id);
+    if (fromIndex !== -1 && toIndex !== -1) {
+      onReorderFields(step.id, fromIndex, toIndex);
+    }
+  };
 
   return (
     <div className="flex flex-1 min-h-0 flex-col">
@@ -61,25 +93,45 @@ export function FieldList({
             </div>
           ) : (
             <>
-              {step.fields.map((field, index) => (
-                <FieldItem
-                  key={field.id}
-                  field={field}
-                  index={index}
-                  totalFields={step.fields.length}
-                  isSelected={field.id === selectedFieldId}
-                  onSelect={() => onSelectField(field.id)}
-                  onMoveUp={() => onReorderFields(step.id, index, index - 1)}
-                  onMoveDown={() => onReorderFields(step.id, index, index + 1)}
-                  onDelete={() => onRemoveField(step.id, field.id)}
-                  onDuplicate={() => onDuplicateField(step.id, field.id)}
-                />
-              ))}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={step.fields.map((f) => f.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {step.fields.map((field, index) => (
+                    <SortableFieldItem
+                      key={field.id}
+                      field={field}
+                      index={index}
+                      totalFields={step.fields.length}
+                      isSelected={field.id === selectedFieldId}
+                      onSelect={() => onSelectField(field.id)}
+                      onMoveUp={() => onReorderFields(step.id, index, index - 1)}
+                      onMoveDown={() => onReorderFields(step.id, index, index + 1)}
+                      onDelete={() => onRemoveField(step.id, field.id)}
+                      onDuplicate={() => onDuplicateField(step.id, field.id)}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
+
               <div className="mt-2">
                 <FieldTypePicker
                   onSelectType={(type) => onAddField(step.id, type)}
                 />
               </div>
+              {formSchema && onAddLogicRules && (
+                <div className="mt-2">
+                  <AiLogicBuilder
+                    formSchema={formSchema}
+                    onAddRules={onAddLogicRules}
+                  />
+                </div>
+              )}
             </>
           )}
         </div>

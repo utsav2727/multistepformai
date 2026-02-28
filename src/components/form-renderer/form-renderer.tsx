@@ -9,6 +9,7 @@ import { StepRenderer } from "./step-renderer";
 import { StepNavigation } from "./step-navigation";
 import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
+import { OneQuestionRenderer } from "./one-question-renderer";
 import { AnimatePresence, motion } from "framer-motion";
 
 export interface FormRendererProps {
@@ -26,6 +27,23 @@ const stepVariants = {
 };
 
 export function FormRenderer({ schema, settings, submitUrl, onSubmitted, themeOverrides }: FormRendererProps) {
+  // One-question-per-screen (Typeform-style) mode
+  if (settings.behavior.oneQuestionPerScreen) {
+    return (
+      <div
+        className="mx-auto w-full max-w-2xl px-1 sm:px-0"
+        style={buildThemeCSSVars(settings.theme, themeOverrides)}
+      >
+        <OneQuestionRenderer
+          schema={schema}
+          settings={settings}
+          submitUrl={submitUrl}
+          onSubmitted={onSubmitted}
+        />
+      </div>
+    );
+  }
+
   const form = useFormRenderer(schema);
   const onSubmittedRef = useRef(onSubmitted);
   onSubmittedRef.current = onSubmitted;

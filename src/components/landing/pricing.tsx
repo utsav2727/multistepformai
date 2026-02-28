@@ -108,7 +108,7 @@ export function Pricing() {
                     Most Popular
                   </div>
                 )}
-                <CardHeader>
+                <CardHeader className="px-6 pt-6 pb-2">
                   <CardTitle>{plan.name}</CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
                   <div className="mt-4">
@@ -116,7 +116,7 @@ export function Pricing() {
                     <span className="text-muted-foreground">{plan.period}</span>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-6 pb-4">
                   <ul className="space-y-3">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-center gap-2">
@@ -128,7 +128,7 @@ export function Pricing() {
                     ))}
                   </ul>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="px-6 pb-6">
                   <Button
                     className={`w-full transition-all duration-300 ${
                       plan.popular

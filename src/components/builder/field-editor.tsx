@@ -17,11 +17,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ValidationEditor } from "./validation-editor";
+import { AiFieldImprover } from "./ai-field-improver";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 
 interface FieldEditorProps {
   field: FormField;
   step: FormStep;
+  formTitle?: string;
   onUpdateField: (
     stepId: string,
     fieldId: string,
@@ -113,6 +115,7 @@ function OptionsEditor({
 export function FieldEditor({
   field,
   step,
+  formTitle,
   onUpdateField,
 }: FieldEditorProps) {
   const fieldInfo = FIELD_REGISTRY[field.type];
@@ -128,11 +131,22 @@ export function FieldEditor({
 
   return (
     <div className="flex h-full w-full md:w-[320px] flex-col border-l bg-muted/30">
-      <div className="border-b px-4 py-3">
-        <h2 className="text-sm font-semibold">Field Properties</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {fieldInfo.label}
-        </p>
+      <div className="border-b px-4 py-3 flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <h2 className="text-sm font-semibold">Field Properties</h2>
+          <p className="text-xs text-muted-foreground mt-0.5 truncate">
+            {fieldInfo.label}
+          </p>
+        </div>
+        <AiFieldImprover
+          field={field}
+          formTitle={formTitle}
+          onApply={(updates) => update({
+            label: updates.label,
+            description: updates.description ?? undefined,
+            placeholder: updates.placeholder ?? undefined,
+          })}
+        />
       </div>
 
       <ScrollArea className="flex-1 min-h-0 h-full">

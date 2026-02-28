@@ -103,6 +103,7 @@ export interface FormSettings {
   behavior: {
     showProgressBar: boolean;
     showStepNumbers: boolean;
+    oneQuestionPerScreen: boolean;
     submitButtonText: string;
     successMessage: string;
     successRedirectUrl: string | null;
@@ -111,6 +112,7 @@ export interface FormSettings {
   notifications: {
     emailOnSubmission: boolean;
     notificationEmail: string | null;
+    slackWebhookUrl: string | null;
   };
 }
 

@@ -9,6 +9,7 @@ import { PreviewPanel } from "./preview-panel";
 import { ThemeEditor } from "./theme-editor";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AiToolbar } from "./ai-toolbar";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -40,6 +41,7 @@ interface BuilderLayoutProps {
   builder: UseFormBuilderReturn;
   activeTab: string;
   formId?: string;
+  formTitle?: string;
   formStatus?: "draft" | "published" | "archived";
 }
 
@@ -87,6 +89,25 @@ function SettingsPanel({ builder }: { builder: UseFormBuilderReturn }) {
                     behavior: {
                       ...settings.behavior,
                       showStepNumbers: checked,
+                    },
+                  })
+                }
+                size="sm"
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-xs">One Question Per Screen</Label>
+                <p className="text-[10px] text-muted-foreground">Typeform-style — show one field at a time</p>
+              </div>
+              <Switch
+                checked={settings.behavior.oneQuestionPerScreen ?? false}
+                onCheckedChange={(checked: boolean) =>
+                  updateSettings({
+                    behavior: {
+                      ...settings.behavior,
+                      oneQuestionPerScreen: checked,
                     },
                   })
                 }
@@ -292,7 +313,7 @@ function EmbedPanel({
 
         {/* Direct Link */}
         <Card>
-          <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-2">
+          <CardHeader className="p-4 sm:p-4">
             <CardTitle className="text-base flex items-center gap-2">
               <Globe className="size-4" />
               Direct Link
@@ -301,7 +322,7 @@ function EmbedPanel({
               Share this link directly via email, social media, or messaging
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6 pt-2 sm:pt-2 space-y-3">
+          <CardContent className="px-4 sm:px-6 pb-4 space-y-3">
             <div className="flex items-center gap-2 rounded-md bg-muted p-3">
               <code className="flex-1 text-xs break-all">{publicUrl}</code>
             </div>
@@ -331,7 +352,7 @@ function EmbedPanel({
 
         {/* Embed Mode Selection */}
         <Card>
-          <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-2">
+          <CardHeader className="p-4 sm:p-4">
             <CardTitle className="text-base flex items-center gap-2">
               <Code className="size-4" />
               Embed on Your Website
@@ -340,7 +361,7 @@ function EmbedPanel({
               Choose how the form appears and copy the code
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6 pt-2 sm:pt-2 space-y-4">
+          <CardContent className="px-4 sm:px-6 pb-4 space-y-4">
             {/* Mode selector */}
             <div>
               <Label className="text-xs font-medium mb-2 block">Display Mode</Label>
@@ -403,13 +424,13 @@ function EmbedPanel({
 
         {/* Live Preview */}
         <Card>
-          <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-2">
+          <CardHeader className="p-4 sm:p-4">
             <CardTitle className="text-base">Preview</CardTitle>
             <CardDescription className="text-xs">
               How your form looks when embedded
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6 pt-2 sm:pt-2">
+          <CardContent className="px-4 sm:px-6 pb-4">
             <div className="rounded-lg border overflow-hidden">
               {/* Browser chrome */}
               <div className="bg-muted/50 px-3 py-2 flex items-center gap-2 border-b">
@@ -446,6 +467,7 @@ export function BuilderLayout({
   builder,
   activeTab,
   formId,
+  formTitle,
   formStatus,
 }: BuilderLayoutProps) {
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>("fields");
@@ -479,9 +501,50 @@ export function BuilderLayout({
     );
   }
 
-  // Editor tab (default)
+  // Editor tab (default) — handle AI rewrite/flow actions
+  const handleApplyRewrite = (result: {
+    title: string;
+    steps: { id: string; title: string; description?: string | null; fields: { id: string; label: string; description?: string | null; placeholder?: string | null }[] }[];
+  }) => {
+    // Apply rewritten step titles/descriptions and field labels/descriptions/placeholders
+    const updatedSteps = builder.schema.steps.map((step) => {
+      const rewritten = result.steps.find((s) => s.id === step.id);
+      if (!rewritten) return step;
+      return {
+        ...step,
+        title: rewritten.title,
+        description: rewritten.description ?? step.description,
+        fields: step.fields.map((field) => {
+          const rf = rewritten.fields.find((f) => f.id === field.id);
+          if (!rf) return field;
+          return {
+            ...field,
+            label: rf.label,
+            description: rf.description ?? field.description,
+            placeholder: rf.placeholder ?? field.placeholder,
+          };
+        }),
+      };
+    });
+    builder.setSchema({ ...builder.schema, steps: updatedSteps });
+  };
+
+  const handleApplyFlow = (newSteps: import("@/lib/form-schema/types").FormStep[]) => {
+    builder.setSchema({ ...builder.schema, steps: newSteps });
+  };
+
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
+      {/* Desktop AI toolbar row */}
+      <div className="hidden md:flex items-center justify-end gap-2 border-b px-3 py-1.5">
+        <AiToolbar
+          schema={builder.schema}
+          formTitle={formTitle ?? "Untitled Form"}
+          onApplyRewrite={handleApplyRewrite}
+          onApplyFlow={handleApplyFlow}
+        />
+      </div>
+
       {/* Mobile panel selector - visible only on small screens */}
       <div className="flex border-b md:hidden">
         <Button
@@ -570,6 +633,7 @@ export function BuilderLayout({
           <FieldList
             step={builder.selectedStep}
             selectedFieldId={builder.selectedFieldId}
+            formSchema={builder.schema}
             onSelectField={(fieldId) => {
               builder.selectField(fieldId);
               if (fieldId) setMobilePanel("properties");
@@ -578,6 +642,12 @@ export function BuilderLayout({
             onRemoveField={builder.removeField}
             onDuplicateField={builder.duplicateField}
             onReorderFields={builder.reorderFields}
+            onAddLogicRules={(rules) => {
+              builder.setSchema({
+                ...builder.schema,
+                logicRules: [...builder.schema.logicRules, ...rules],
+              });
+            }}
           />
         </div>
 
@@ -587,6 +657,7 @@ export function BuilderLayout({
             <FieldEditor
               field={builder.selectedField}
               step={builder.selectedStep}
+              formTitle={formTitle}
               onUpdateField={builder.updateField}
             />
           </div>

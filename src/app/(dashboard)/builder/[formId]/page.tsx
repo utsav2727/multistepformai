@@ -9,6 +9,7 @@ import {
 } from "@/lib/form-schema/defaults";
 import { useFormBuilder } from "@/hooks/use-form-builder";
 import { useAutoSave } from "@/hooks/use-auto-save";
+import { useBuilderShortcuts } from "@/hooks/use-builder-shortcuts";
 import { BuilderTopbar } from "@/components/builder/builder-topbar";
 import { BuilderLayout } from "@/components/builder/builder-layout";
 import { Loader2 } from "lucide-react";
@@ -90,6 +91,7 @@ function BuilderPageInner({
   const initialSettings: FormSettings = form.settings || createDefaultSettings();
 
   const builder = useFormBuilder(initialSchema, initialSettings);
+  useBuilderShortcuts(builder);
 
   const { saving, lastSaved } = useAutoSave({
     formId: form.id,
@@ -171,6 +173,7 @@ function BuilderPageInner({
         builder={builder}
         activeTab={activeTab}
         formId={form.id}
+        formTitle={form.title}
         formStatus={form.status}
       />
     </div>
