@@ -128,7 +128,7 @@ export function OneQuestionRenderer({ schema, settings, submitUrl, onSubmitted }
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px] text-center space-y-4">
         <div className="text-4xl">🎉</div>
-        <h2 className="text-2xl font-semibold">{settings.behavior.successMessage}</h2>
+        <h2 className="text-2xl font-semibold">{settings?.behavior?.successMessage || "Thank you for your submission!"}</h2>
       </div>
     );
   }
@@ -140,7 +140,7 @@ export function OneQuestionRenderer({ schema, settings, submitUrl, onSubmitted }
   return (
     <div className="space-y-6">
       {/* Progress */}
-      {settings.behavior.showProgressBar && (
+      {settings?.behavior?.showProgressBar && (
         <div className="space-y-1.5">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>{currentIndex + 1} / {totalQuestions}</span>
@@ -192,7 +192,7 @@ export function OneQuestionRenderer({ schema, settings, submitUrl, onSubmitted }
             disabled={isSubmitting}
             className="flex-1 sm:flex-none bg-primary text-primary-foreground"
           >
-            {isSubmitting ? <><Loader2 className="size-4 mr-2 animate-spin" /> Submitting...</> : settings.behavior.submitButtonText}
+            {isSubmitting ? <><Loader2 className="size-4 mr-2 animate-spin" /> Submitting...</> : (settings?.behavior?.submitButtonText || "Submit")}
           </Button>
         ) : (
           <Button onClick={handleNext} className="flex-1 sm:flex-none bg-primary text-primary-foreground">

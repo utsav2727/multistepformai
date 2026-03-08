@@ -15,12 +15,10 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Save, Shield, User } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
 export default function AccountPage() {
   const { user, signOut } = useAuth();
-  const supabase = createClient();
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -39,11 +37,14 @@ export default function AccountPage() {
 
     setUpdatingPassword(true);
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword,
+      const res = await fetch("/api/auth/update-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword, newPassword }),
       });
 
-      if (error) throw error;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update password");
 
       toast.success("Password updated successfully");
       setCurrentPassword("");

@@ -1,4 +1,6 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import connectDB from "@/lib/db";
+import { Form } from "@/models/Form";
+import mongoose from "mongoose";
 import { notFound } from "next/navigation";
 import { EmbedFormClient } from "./embed-form-client";
 import type { FormSchema, FormSettings } from "@/lib/form-schema/types";
@@ -13,14 +15,13 @@ export default async function EmbedPage({
 }) {
   const { formId } = await params;
   const sp = await searchParams;
-  const supabase = createAdminClient();
 
-  const { data: form } = await supabase
-    .from("forms")
-    .select("id, schema, settings, status")
-    .eq("id", formId)
-    .eq("status", "published")
-    .single();
+  if (!mongoose.Types.ObjectId.isValid(formId)) {
+    notFound();
+  }
+
+  await connectDB();
+  const form = await Form.findOne({ _id: formId, status: "published" });
 
   if (!form) {
     notFound();
@@ -38,8 +39,8 @@ export default async function EmbedPage({
 
   return (
     <EmbedFormClient
-      formId={form.id}
-      schema={form.schema as unknown as FormSchema}
+      formId={(form as any)._id.toString()}
+      schema={form.jsonSchema as unknown as FormSchema}
       settings={form.settings as unknown as FormSettings}
       themeOverrides={hasOverrides ? themeOverrides : undefined}
     />

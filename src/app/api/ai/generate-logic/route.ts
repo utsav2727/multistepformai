@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { openai } from "@/lib/openai/client";
 import { LOGIC_GENERATE_SYSTEM_PROMPT } from "@/lib/openai/prompts";
 import { z } from "zod";
@@ -21,9 +22,8 @@ const requestSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const supabase = await createServerClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (!user || authError) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

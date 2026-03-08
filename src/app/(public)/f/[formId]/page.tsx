@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
-import { createAdminClient } from "@/lib/supabase/admin";
+import connectDB from "@/lib/db";
+import { Form } from "@/models/Form";
 import { FormRenderer } from "@/components/form-renderer/form-renderer";
 import { ViewTracker } from "@/components/form-renderer/view-tracker";
 import { buildThemeCSSVars } from "@/lib/theme-utils";
 import type { FormSchema, FormSettings } from "@/lib/form-schema/types";
+import mongoose from "mongoose";
 
 interface PublicFormPageProps {
   params: Promise<{ formId: string }>;
@@ -11,19 +13,19 @@ interface PublicFormPageProps {
 
 export default async function PublicFormPage({ params }: PublicFormPageProps) {
   const { formId } = await params;
-  const supabase = createAdminClient();
 
-  const { data: form, error } = await supabase
-    .from("forms")
-    .select("id, title, description, schema, settings, status")
-    .eq("id", formId)
-    .single();
-
-  if (error || !form || form.status !== "published") {
+  if (!mongoose.Types.ObjectId.isValid(formId)) {
     notFound();
   }
 
-  const schema = form.schema as FormSchema;
+  await connectDB();
+  const form = await Form.findById(formId);
+
+  if (!form || form.status !== "published") {
+    notFound();
+  }
+
+  const schema = form.jsonSchema as FormSchema;
   const settings = form.settings as FormSettings;
 
   return (

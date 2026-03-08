@@ -44,6 +44,7 @@ export function PromptInput() {
           title: generated.title,
           description: generated.description,
           schema: generated.schema,
+          suggestedTheme: generated.suggestedTheme,
         }),
       });
 

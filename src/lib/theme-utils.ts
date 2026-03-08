@@ -17,11 +17,11 @@ export function buildThemeCSSVars(
   theme: FormTheme,
   overrides?: ThemeOverrides
 ): React.CSSProperties {
-  const primary = overrides?.primaryColor || theme.primaryColor;
-  const bg = overrides?.backgroundColor || theme.backgroundColor;
-  const text = overrides?.textColor || theme.textColor;
-  const font = overrides?.fontFamily || theme.fontFamily;
-  const radius = overrides?.borderRadius || theme.borderRadius;
+  const primary = overrides?.primaryColor || theme?.primaryColor || "#6366f1";
+  const bg = overrides?.backgroundColor || theme?.backgroundColor || "#ffffff";
+  const text = overrides?.textColor || theme?.textColor || "#0f172a";
+  const font = overrides?.fontFamily || theme?.fontFamily || "Inter";
+  const radius = overrides?.borderRadius || theme?.borderRadius || "8px";
 
   const primaryFg = getContrastColor(primary);
 
@@ -75,6 +75,7 @@ export function getContrastColor(hex: string): string {
 }
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  if (!hex || typeof hex !== 'string') return null;
   const cleaned = hex.replace("#", "");
   if (cleaned.length !== 6) return null;
   return {

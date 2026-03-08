@@ -21,14 +21,23 @@ function sanitizeSchema(schema: GenerateFormResponse["schema"]): GenerateFormRes
       fields: step.fields.map((field) => ({
         ...field,
         validation: (field.validation ?? []).filter(
-          (rule) => VALID_VALIDATION_TYPES.has(rule.type)
+          (rule) => rule && VALID_VALIDATION_TYPES.has(rule.type)
         ),
       })),
     })),
     logicRules: (schema.logicRules ?? []).filter((rule) => {
+      if (!rule || !Array.isArray(rule.conditions)) return false;
+
+      const validConditions = rule.conditions.every((c) =>
+        c &&
+        c.fieldId &&
+        VALID_OPERATORS.has(c.operator) &&
+        c.value !== null &&
+        c.value !== undefined
+      );
+
       return (
-        Array.isArray(rule.conditions) &&
-        rule.conditions.every((c) => c.fieldId && VALID_OPERATORS.has(c.operator)) &&
+        validConditions &&
         VALID_CONJUNCTIONS.has(rule.conjunction) &&
         VALID_ACTIONS.has(rule.action) &&
         typeof rule.targetId === "string"
@@ -77,7 +86,7 @@ export async function generateForm(
     : prompt;
 
   const response = await openai.chat.completions.create({
-    model: "arcee-ai/trinity-large-preview:free",
+    model: "google/gemini-2.0-flash-001",
     messages: [
       { role: "system", content: FORM_GENERATION_SYSTEM_PROMPT },
       { role: "user", content: userMessage },
@@ -101,15 +110,38 @@ export async function generateForm(
   console.log("AI response keys:", Object.keys(parsed));
 
   const normalized = normalizeResponse(parsed);
+  if ((normalized as any).description === null) (normalized as any).description = "";
   normalized.schema = sanitizeSchema(normalized.schema);
 
-  // Ensure each field has required arrays/defaults
+  // Ensure each field has required arrays/defaults and handle nulls
   for (const step of normalized.schema.steps) {
+    if ((step as any).id === null) {
+      (step as any).id = `step_${Math.random().toString(36).slice(2, 10)}`;
+    }
+    if ((step as any).description === null) (step as any).description = undefined;
+    if ((step as any).title === null) (step as any).title = "Untitled Step";
+
     for (const field of step.fields) {
+      if ((field as any).id === null) {
+        (field as any).id = `field_${Math.random().toString(36).slice(2, 10)}`;
+      }
       if (!field.validation) field.validation = [];
       if (!field.options) field.options = undefined;
+
+      // AI sometimes returns null for optional fields, which fails Zod validation
+      if ((field as any).description === null) (field as any).description = undefined;
+      if ((field as any).placeholder === null) (field as any).placeholder = undefined;
     }
   }
+  if (normalized.suggestedTheme) {
+    if ((normalized.suggestedTheme as any).primaryColor === null) {
+      delete (normalized.suggestedTheme as any).primaryColor;
+    }
+    if ((normalized.suggestedTheme as any).fontFamily === null) {
+      delete (normalized.suggestedTheme as any).fontFamily;
+    }
+  }
+
   if (!normalized.schema.logicRules) {
     normalized.schema.logicRules = [];
   }

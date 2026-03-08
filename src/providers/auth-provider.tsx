@@ -3,16 +3,13 @@
 import {
   createContext,
   useContext,
-  useEffect,
-  useState,
   useMemo,
   type ReactNode,
 } from "react";
-import { createClient } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
+import { useSession, signOut as nextAuthSignOut, SessionProvider } from "next-auth/react";
 
 interface AuthContextType {
-  user: User | null;
+  user: any | null;
   loading: boolean;
   signOut: () => Promise<void>;
 }
@@ -20,45 +17,32 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  signOut: async () => {},
+  signOut: async () => { },
 });
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const supabase = useMemo(() => createClient(), []);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
-    };
-
-    getUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
+export function AuthProviderInner({ children }: { children: ReactNode }) {
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
+  const user = session?.user ?? null;
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    window.location.href = "/login";
+    await nextAuthSignOut({ redirect: true, callbackUrl: "/login" });
   };
 
   return (
     <AuthContext.Provider value={{ user, loading, signOut }}>
       {children}
     </AuthContext.Provider>
+  );
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  return (
+    <SessionProvider>
+      <AuthProviderInner>
+        {children}
+      </AuthProviderInner>
+    </SessionProvider>
   );
 }
 

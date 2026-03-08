@@ -1,24 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
-
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: corsHeaders });
-}
+import connectDB from "@/lib/db";
+import { Form } from "@/models/Form";
+import mongoose from "mongoose";
 
 export async function POST(
   _request: NextRequest,
   { params }: { params: Promise<{ formId: string }> }
 ) {
   const { formId } = await params;
-  const supabase = createAdminClient();
 
-  await supabase.rpc("increment_view_count", { form_id: formId });
+  if (!mongoose.Types.ObjectId.isValid(formId)) {
+    return NextResponse.json({ error: "Invalid Form ID" }, { status: 400 });
+  }
 
-  return NextResponse.json({ success: true }, { headers: corsHeaders });
+  await connectDB();
+  try {
+    await Form.findByIdAndUpdate(formId, { $inc: { viewCount: 1 } });
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

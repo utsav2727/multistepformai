@@ -28,7 +28,7 @@ const stepVariants = {
 
 export function FormRenderer({ schema, settings, submitUrl, onSubmitted, themeOverrides }: FormRendererProps) {
   // One-question-per-screen (Typeform-style) mode
-  if (settings.behavior.oneQuestionPerScreen) {
+  if (settings?.behavior?.oneQuestionPerScreen) {
     return (
       <div
         className="mx-auto w-full max-w-2xl px-1 sm:px-0"
@@ -64,8 +64,8 @@ export function FormRenderer({ schema, settings, submitUrl, onSubmitted, themeOv
   if (form.isSubmitted) {
     return (
       <FormSuccess
-        message={settings.behavior.successMessage}
-        redirectUrl={settings.behavior.successRedirectUrl}
+        message={settings?.behavior?.successMessage || "Thank you!"}
+        redirectUrl={settings?.behavior?.successRedirectUrl}
       />
     );
   }
@@ -75,12 +75,12 @@ export function FormRenderer({ schema, settings, submitUrl, onSubmitted, themeOv
       className="mx-auto w-full max-w-2xl space-y-4 sm:space-y-6 px-1 sm:px-0"
       style={buildThemeCSSVars(settings.theme, themeOverrides)}
     >
-      {settings.behavior.showProgressBar && form.totalSteps > 1 && (
+      {settings?.behavior?.showProgressBar && form.totalSteps > 1 && (
         <StepProgress
           currentStep={form.currentStepIndex}
           totalSteps={form.totalSteps}
           progress={form.progress}
-          showStepNumbers={settings.behavior.showStepNumbers}
+          showStepNumbers={settings?.behavior?.showStepNumbers ?? true}
         />
       )}
 
@@ -118,7 +118,7 @@ export function FormRenderer({ schema, settings, submitUrl, onSubmitted, themeOv
         currentStepIndex={form.currentStepIndex}
         totalSteps={form.totalSteps}
         isSubmitting={form.isSubmitting}
-        submitButtonText={settings.behavior.submitButtonText}
+        submitButtonText={settings?.behavior?.submitButtonText || "Submit"}
         onPrev={form.prevStep}
         onNext={form.nextStep}
         onSubmit={() => form.submit(submitUrl)}

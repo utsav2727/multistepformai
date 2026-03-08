@@ -1,17 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
+import { signIn } from "next-auth/react";
 
 export function OAuthButtons() {
-  const supabase = createClient();
-
   const handleGoogleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/callback`,
-      },
+    await signIn("google", {
+      callbackUrl: "/dashboard",
     });
   };
 

@@ -1,46 +1,59 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import connectDB from "@/lib/db";
+import { Form } from "@/models/Form";
+import mongoose from "mongoose";
 
 export async function POST(
   _request: NextRequest,
   { params }: { params: Promise<{ formId: string }> }
 ) {
   const { formId } = await params;
-  const supabase = await createServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Get original form
-  const { data: original } = await supabase
-    .from("forms")
-    .select("title, description, schema, settings")
-    .eq("id", formId)
-    .eq("user_id", user.id)
-    .single();
-
-  if (!original) {
-    return NextResponse.json({ error: "Form not found" }, { status: 404 });
+  if (!mongoose.Types.ObjectId.isValid(formId)) {
+    return NextResponse.json({ error: "Invalid Form ID" }, { status: 400 });
   }
 
-  // Create duplicate
-  const { data, error } = await supabase
-    .from("forms")
-    .insert({
-      user_id: user.id,
+  await connectDB();
+  try {
+    // Get original form
+    const original = await Form.findOne({ _id: formId, userId: session.user.id });
+
+    if (!original) {
+      return NextResponse.json({ error: "Form not found" }, { status: 404 });
+    }
+
+    // Create duplicate
+    const newForm = new Form({
+      userId: session.user.id,
       title: `${original.title} (Copy)`,
       description: original.description,
-      schema: original.schema,
+      jsonSchema: original.jsonSchema,
       settings: original.settings,
-    })
-    .select()
-    .single();
+      status: "draft",
+      submissionCount: 0,
+      viewCount: 0
+    });
 
-  if (error) {
+    await newForm.save();
+
+    const mappedForm = {
+      ...newForm.toObject(),
+      id: (newForm as any)._id.toString(),
+      schema: newForm.jsonSchema,
+      submission_count: newForm.submissionCount,
+      view_count: newForm.viewCount,
+      created_at: newForm.createdAt,
+      updated_at: newForm.updatedAt
+    };
+
+    return NextResponse.json(mappedForm, { status: 201 });
+  } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-  return NextResponse.json(data, { status: 201 });
 }
